@@ -371,6 +371,13 @@ class TestOrderPlacement(unittest.TestCase):
             self.assertFalse(result["success"])
             self.assertEqual(result["message"], "Payment failed")
 
+    def test_get_subtotal(self):
+        """
+        Test case for calculating subtotal of a CartItem.
+        """
+        item = CartItem("Burger", 8.99, 3)
+        self.assertEqual(item.get_subtotal(), 26.97)  # 8.99 * 3 = 26.97
+
 
 if __name__ == "__main__":
     unittest.main()
