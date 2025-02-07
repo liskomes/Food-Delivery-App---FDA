@@ -1,3 +1,5 @@
+import re
+
 class UserRegistration:
     def __init__(self):
         """
@@ -43,7 +45,7 @@ class UserRegistration:
         self.users[email] = {"password": password, "confirmed": False}
         return {"success": True, "message": "Registration successful, confirmation email sent"}
 
-    def is_valid_email(self, email):
+    def is_valid_email(self, email): #Add regex pattern (import re)
         """
         Checks if the provided email is valid based on a simple validation rule.
         This rule only checks that the email contains an '@' symbol and has a '.' in the domain part.
@@ -54,7 +56,7 @@ class UserRegistration:
         Returns:
             bool: True if the email is valid, False otherwise.
         """
-        return "@" in email and "." in email.split("@")[-1]
+        return re.match(r'^\w{1,}@(\w{1,}+\.)+[a-zA-Z]{1,}$', email)
 
     def is_strong_password(self, password):
         """
@@ -98,6 +100,21 @@ class TestUserRegistration(unittest.TestCase):
         result = self.registration.register("userexample.com", "Password123", "Password123")
         self.assertFalse(result['success'])  # Ensures registration fails due to invalid email.
         self.assertEqual(result['error'], "Invalid email format")  # Checks the specific error message.
+
+        result = self.registration.register("1@1.1", "Password123", "Password123")
+        self.assertFalse(result['success'])  # Ensures registration fails due to invalid email.
+        self.assertEqual(result['error'], "Invalid email format")  # Checks the specific error message.
+
+    def test_is_email_valid(self):
+        """
+        Test case for valid email format.
+        It verifies that attempting to register with an correctly formatted email results.
+        """
+        result = self.registration.register("1@1.com", "Password123", "Password123")
+        self.assertTrue(result['success'], True)  # Ensures registration passes due to correct email
+
+        result = self.registration.register("1dd@a.d", "Password123", "Password123")
+        self.assertTrue(result['success'], True)  # Ensures registration passes due to correct email
 
     def test_password_mismatch(self):
         """
