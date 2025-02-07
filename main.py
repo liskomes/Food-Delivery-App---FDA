@@ -12,9 +12,11 @@ from Restaurant_Browsing import RestaurantDatabase, RestaurantBrowsing
 USERS_FILE = "users.json"
 
 def load_users():
-    if not os.path.exists(USERS_FILE):
+    """Loading users from users.json"""
+    
+    if not os.path.exists(USERS_FILE): #jos ei löyty niin palautetaan tyhjää
         return {}
-    with open(USERS_FILE, "r") as f:
+    with open(USERS_FILE, "r") as f: #avataan f:nä 
         return json.load(f)
 
 def save_users(users):
@@ -87,6 +89,8 @@ class StartupFrame(tk.Frame):
 
 
 class RegisterFrame(tk.Frame):
+    """Class representing a RegisterFrame"""
+
     def __init__(self, master):
         super().__init__(master)
 
