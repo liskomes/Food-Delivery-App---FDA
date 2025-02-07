@@ -320,6 +320,33 @@ class TestOrderPlacement(unittest.TestCase):
         self.assertTrue(result["success"])
         self.assertEqual(result["message"], "Order is valid")
 
+    def test_validate_multiple_order_success(self):
+        """
+        Test case for multiple orders.
+        """
+        self.cart.add_item("Burger", 8.99, 2)
+        self.cart.add_item("Burger", 8.99, 1)  # Oletamme, että tämä lisää määrän olemassa olevaan tuotteeseen
+        self.cart.add_item("Pizza", 12.99, 1)
+        self.cart.add_item("Pizza", 12.99, 15)
+        self.cart.add_item("Pizza", 12.99, 1)
+        
+        result = self.order.validate_order()
+        
+        self.assertTrue(result["success"])
+        self.assertEqual(result["message"], "Order is valid")
+        
+        # Varmistetaan, että samat tuotteet yhdistetään eikä niitä lisätä erillisinä riveinä
+        self.assertEqual(len(self.cart.items), 2)  # Oletamme, että tuotteet yhdistyvät oikein
+        
+        # Etsitään oikeat tuotteet listasta
+        burger = next(item for item in self.cart.items if item.name == "Burger")
+        pizza = next(item for item in self.cart.items if item.name == "Pizza")
+        
+        self.assertEqual(burger.quantity, 3)  # Varmistetaan, että Burger-määrä on 4
+        self.assertEqual(pizza.quantity, 17)
+
+
+
     def test_confirm_order_success(self):
         """
         Test case for confirming an order with successful payment.
