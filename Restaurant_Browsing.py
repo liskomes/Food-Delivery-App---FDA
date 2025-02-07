@@ -70,11 +70,11 @@ class RestaurantBrowsing:
 
         if cuisine_type:
             results = [restaurant for restaurant in results 
-                       if restaurant['cuisine'].lower() == cuisine_type.lower()]
+                       if cuisine_type.lower() in restaurant['cuisine'].lower()]
 
         if location:
             results = [restaurant for restaurant in results 
-                       if restaurant['location'].lower() == location.lower()]
+                       if location.lower() in restaurant['location'].lower()]
 
         if min_rating:
             results = [restaurant for restaurant in results 
@@ -198,6 +198,16 @@ class TestRestaurantBrowsing(unittest.TestCase):
         results = self.browsing.search_by_filters(cuisine_type="Italian", location="Downtown", min_rating=4.0)
         self.assertEqual(len(results), 1)  # Only one restaurant should match all the filters
         self.assertEqual(results[0]['name'], "Italian Bistro")  # The result should be "Italian Bistro"
+
+    def test_search_by_partial_search_filters(self):
+        """
+        Test searching for restaurants by multiple filters (partially words) (cuisine type, location, and minimum rating).
+        """
+        results = self.browsing.search_by_filters(cuisine_type="Itali", location="Downtown", min_rating=4.0)
+        self.assertGreater(len(results), 0, "Expected at least one result")
+
+        results = self.browsing.search_by_filters(cuisine_type="Itali", location="Downto", min_rating=4.0)
+        self.assertGreater(len(results), 0, "Expected at least one result")
 
 
 if __name__ == '__main__':
