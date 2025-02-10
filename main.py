@@ -393,8 +393,11 @@ class TestMain(unittest.TestCase):
         self.main_frame = self.app.current_frame
         self.results_tree = self.main_frame.results_tree
 
+        """Set up the test case by initializing the cart and adding sample items."""
+        self.cart = Cart()
+
     def test_main_table_columns(self):
-        """Test case for validating amount of columns."""
+        """Test case for validating amount of columns and that columns are the same."""
         expected_columns = ("cuisine", "location","phonenumber", "rating")
         actual_columns = self.results_tree["columns"]
         
@@ -402,3 +405,25 @@ class TestMain(unittest.TestCase):
         self.assertEqual(len(actual_columns), len(expected_columns))
         # Check that columns are the same
         self.assertListEqual(list(actual_columns), list(expected_columns))
+    
+
+    def test_remove_item_existing(self):
+        """Test that removing an existing item from the cart works correctly."""
+        # Add an item to the cart
+        self.cart.add_item("Pizza", 12.99, 2)
+        
+        # Remove the item from the cart
+        self.cart.remove_item("Pizza")
+        
+        # Check that the item is no longer in the cart
+        remaining_items = [item.name for item in self.cart.items]
+        self.assertNotIn("Pizza", remaining_items)
+    
+    def test_remove_item_empty_cart(self):
+        """Test that attempting to remove an item from an empty cart does not break the program."""
+        self.cart.items = []
+        # Try to remove an item
+        self.cart.remove_item("Pizza")  
+        # Make sure the cart remains empty (should still contain 0 items)
+        self.assertEqual(len(self.cart.items), 0)
+
