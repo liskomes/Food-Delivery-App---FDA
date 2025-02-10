@@ -288,12 +288,34 @@ class CartViewPopup(tk.Toplevel):
         super().__init__(master)
         self.title("Cart Items")
 
-        items = cart.view_cart()
+        self.master = master
+        self.cart = master.cart
+        items = self.cart.view_cart()
+        
         if not items:
             tk.Label(self, text="Your cart is empty").pack(pady=20)
         else:
             for i in items:
-                tk.Label(self, text=f"{i['name']} x{i['quantity']} = ${i['subtotal']:.2f}").pack()
+                # Create a frame for each item to contain the label and button
+                item_frame = tk.Frame(self)
+                item_frame.pack(pady=5, anchor="w")  # Adjust padding as needed
+
+                # Create label for the item
+                item_label = tk.Label(item_frame, text=f"{i['name']} x{i['quantity']} = ${i['subtotal']:.2f}")
+                item_label.pack(side="left", padx=10)
+
+                # Create a "Remove" button for the item
+                remove_button = tk.Button(item_frame, text="Remove", command=lambda item=i: self.remove_item(item))
+                remove_button.pack(side="left")
+
+    def remove_item(self, item):
+        for cart_item in self.master.cart.items:
+        # Vertailu tuotteen nimen ja määrän perusteella (käytetään dot-syntaksia)
+            if cart_item.name == item['name'] and cart_item.quantity == item['quantity']:
+                print(f"Removing {cart_item.name} from cart.")
+                # Poistetaan item cartista
+                self.master.cart.items.remove(cart_item)  # Poistetaan item suoraan listalta
+                break
 
 
 class CheckoutPopup(tk.Toplevel):
