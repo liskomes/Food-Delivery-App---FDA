@@ -208,8 +208,7 @@ class TestRestaurantBrowsing(unittest.TestCase):
 
         results = self.browsing.search_by_filters(cuisine_type="Itali", location="Downto", min_rating=4.0)
         self.assertGreater(len(results), 0, "Expected at least one result")
-
-                results = self.browsing.search_by_filters(cuisine_type="ali", location="ownto", min_rating=4.0)
+        results = self.browsing.search_by_filters(cuisine_type="ali", location="ownto", min_rating=4.0)
         self.assertGreater(len(results), 0, "Expected at least one result")
 
 
