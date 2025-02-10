@@ -288,10 +288,12 @@ class CartViewPopup(tk.Toplevel):
         super().__init__(master)
         self.title("Cart Items")
 
-        self.master = master
-        self.cart = master.cart
+        self.cart = cart
         items = self.cart.view_cart()
+
+        self.update_cart_view(items=items)
         
+    def update_cart_view(self, items):
         if not items:
             tk.Label(self, text="Your cart is empty").pack(pady=20)
         else:
@@ -309,12 +311,14 @@ class CartViewPopup(tk.Toplevel):
                 remove_button.pack(side="left")
 
     def remove_item(self, item):
-        for cart_item in self.master.cart.items:
+        for cart_item in self.cart.items:
         # Vertailu tuotteen nimen ja määrän perusteella (käytetään dot-syntaksia)
             if cart_item.name == item['name'] and cart_item.quantity == item['quantity']:
                 print(f"Removing {cart_item.name} from cart.")
                 # Poistetaan item cartista
                 self.master.cart.items.remove(cart_item)  # Poistetaan item suoraan listalta
+                self.update_cart_view(items = self.cart.items)
+                self.destroy()
                 break
 
 
