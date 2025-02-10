@@ -192,10 +192,17 @@ class MainAppFrame(tk.Frame):
         self.num_rating_value.pack(side="left", padx=5)
 
         # Results Treeview
-        self.results_tree = ttk.Treeview(self, columns=("cuisine", "location", "rating"), show="headings")
+        self.results_tree = ttk.Treeview(self, columns=("cuisine", "location","phonenumber", "rating"), show="headings")
         self.results_tree.heading("cuisine", text="Cuisine")
         self.results_tree.heading("location", text="Location")
+        self.results_tree.heading("phonenumber", text="Phone number")
         self.results_tree.heading("rating", text="Rating")
+
+        # Define widths and alignment
+        self.results_tree.column("cuisine", width=150, anchor="w")
+        self.results_tree.column("location", width=150, anchor="w")
+        self.results_tree.column("phonenumber", width=150, anchor="w")
+        self.results_tree.column("rating", width=100, anchor="w")
         self.results_tree.pack(pady=10, fill="x")
 
         # Buttons for actions
@@ -344,3 +351,28 @@ class CheckoutPopup(tk.Toplevel):
 if __name__ == "__main__":
     app = Application()
     app.mainloop()
+
+import unittest
+# Unit tests for OrderPlacement class
+class TestMain(unittest.TestCase):
+    def setUp(self):
+        """Set up the test case by initializing a MainAppFrame instance."""
+        self.app = Application()
+        self.app.show_login_frame()
+        
+        # Login by user
+        self.app.login_user("testuser@example.com")
+        
+        # Wait for UI to be loaded and shows then mainappframe, get results_tree component
+        self.main_frame = self.app.current_frame
+        self.results_tree = self.main_frame.results_tree
+
+    def test_main_table_columns(self):
+        """Test case for validating amount of columns."""
+        expected_columns = ("cuisine", "location","phonenumber", "rating")
+        actual_columns = self.results_tree["columns"]
+        
+        # Check that the number of columns is the same
+        self.assertEqual(len(actual_columns), len(expected_columns))
+        # Check that columns are the same
+        self.assertListEqual(list(actual_columns), list(expected_columns))
