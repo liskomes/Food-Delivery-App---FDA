@@ -187,6 +187,10 @@ class MainAppFrame(tk.Frame):
         self.cuisine_var.pack(side="left", padx=5)
         tk.Button(search_frame, text="Search", command=self.search_restaurants).pack(side="left")
 
+        tk.Label(search_frame, text="Rating at least:").pack(side="left", padx=5)
+        self.num_rating_value = tk.Spinbox(search_frame, from_=0, to=5)  # Example range from 1 to 100
+        self.num_rating_value.pack(side="left", padx=5)
+
         # Results Treeview
         self.results_tree = ttk.Treeview(self, columns=("cuisine", "location", "rating"), show="headings")
         self.results_tree.heading("cuisine", text="Cuisine")
@@ -205,7 +209,12 @@ class MainAppFrame(tk.Frame):
     def search_restaurants(self):
         self.results_tree.delete(*self.results_tree.get_children())
         cuisine = self.cuisine_var.get().strip()
-        results = self.browsing.search_by_filters(cuisine_type=cuisine if cuisine else None)
+        rating = self.num_rating_value.get().strip()
+        try:
+            rating = float(rating)
+        except ValueError:
+            rating = None
+        results = self.browsing.search_by_filters(cuisine_type=cuisine if cuisine else None, min_rating=rating)
         for r in results:
             self.results_tree.insert("", "end", values=(r["cuisine"], r["location"], r["rating"]))
 
