@@ -312,11 +312,9 @@ class CartViewPopup(tk.Toplevel):
 
     def remove_item(self, item):
         for cart_item in self.cart.items:
-        # Vertailu tuotteen nimen ja määrän perusteella (käytetään dot-syntaksia)
             if cart_item.name == item['name'] and cart_item.quantity == item['quantity']:
                 print(f"Removing {cart_item.name} from cart.")
-                # Poistetaan item cartista
-                self.master.cart.items.remove(cart_item)  # Poistetaan item suoraan listalta
+                self.master.cart.items.remove(cart_item) 
                 self.update_cart_view(items = self.cart.items)
                 self.destroy()
                 break
