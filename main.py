@@ -188,7 +188,7 @@ class MainAppFrame(tk.Frame):
         tk.Button(search_frame, text="Search", command=self.search_restaurants).pack(side="left")
 
         tk.Label(search_frame, text="Rating at least:").pack(side="left", padx=5)
-        self.num_rating_value = tk.Spinbox(search_frame, from_=0, to=5)  # Example range from 1 to 100
+        self.num_rating_value = tk.Spinbox(search_frame, from_=0, to=5)
         self.num_rating_value.pack(side="left", padx=5)
 
         # Results Treeview
