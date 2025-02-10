@@ -205,12 +205,22 @@ class TestRestaurantBrowsing(unittest.TestCase):
         """
         results = self.browsing.search_by_filters(cuisine_type="Itali", location="Downtown", min_rating=4.0)
         self.assertGreater(len(results), 0, "Expected at least one result")
-
         results = self.browsing.search_by_filters(cuisine_type="Itali", location="Downto", min_rating=4.0)
         self.assertGreater(len(results), 0, "Expected at least one result")
         results = self.browsing.search_by_filters(cuisine_type="ali", location="ownto", min_rating=4.0)
         self.assertGreater(len(results), 0, "Expected at least one result")
 
+    def test_search_filters_rating(self):
+        results = self.browsing.search_by_filters(cuisine_type=None, location=None, min_rating=4.0)
+        for restaurant in results:
+            self.assertGreaterEqual(restaurant['rating'], 4.0, f"Expected rating to be >= 4.0 for restaurant {restaurant['name']}")
+        results = self.browsing.search_by_filters(cuisine_type=None, location=None, min_rating=2)
+        for restaurant in results:
+            self.assertGreaterEqual(restaurant['rating'], 2.0, f"Expected rating to be >= 4.0 for restaurant {restaurant['name']}")
+
+    def test_search_filter_rating_with_none_value(self):
+        results = self.browsing.search_by_filters(cuisine_type=None, location=None, min_rating=None)
+        self.assertGreater(len(results), 0, "Expected at least one result")
 
 if __name__ == '__main__':
     unittest.main()
