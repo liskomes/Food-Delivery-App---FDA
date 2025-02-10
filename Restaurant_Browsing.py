@@ -97,15 +97,15 @@ class RestaurantDatabase:
         Initialize the RestaurantDatabase with a predefined set of restaurant data.
         """
         self.restaurants = [
-            {"name": "Italian Bistro", "cuisine": "Italian", "location": "Downtown", "rating": 4.5, 
+            {"name": "Italian Bistro", "cuisine": "Italian", "location": "Downtown","phonenumber": "+535 836 7284", "rating": 4.5, 
              "price_range": "$$", "delivery": True},
-            {"name": "Sushi House", "cuisine": "Japanese", "location": "Midtown", "rating": 4.8, 
+            {"name": "Sushi House", "cuisine": "Japanese", "location": "Midtown","phonenumber": "+535 739 9483", "rating": 4.8, 
              "price_range": "$$$", "delivery": False},
-            {"name": "Burger King", "cuisine": "Fast Food", "location": "Uptown", "rating": 4.0, 
+            {"name": "Burger King", "cuisine": "Fast Food", "location": "Uptown","phonenumber": "+535 824 9274", "rating": 4.0, 
              "price_range": "$", "delivery": True},
-            {"name": "Taco Town", "cuisine": "Mexican", "location": "Downtown", "rating": 4.2, 
+            {"name": "Taco Town", "cuisine": "Mexican", "location": "Downtown","phonenumber": "+535 123 4325", "rating": 4.2, 
              "price_range": "$", "delivery": True},
-            {"name": "Pizza Palace", "cuisine": "Italian", "location": "Uptown", "rating": 3.9, 
+            {"name": "Pizza Palace", "cuisine": "Italian", "location": "Uptown","phonenumber": "+535 223 5535", "rating": 3.9, 
              "price_range": "$$", "delivery": True}
         ]
 

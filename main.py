@@ -223,13 +223,13 @@ class MainAppFrame(tk.Frame):
             rating = None
         results = self.browsing.search_by_filters(cuisine_type=cuisine if cuisine else None, min_rating=rating)
         for r in results:
-            self.results_tree.insert("", "end", values=(r["cuisine"], r["location"], r["rating"]))
+            self.results_tree.insert("", "end", values=(r["cuisine"], r["location"], r["phonenumber"], r["rating"]))
 
     def view_all_restaurants(self):
         self.results_tree.delete(*self.results_tree.get_children())
         results = self.database.get_restaurants()
         for r in results:
-            self.results_tree.insert("", "end", values=(r["cuisine"], r["location"], r["rating"]))
+            self.results_tree.insert("", "end", values=(r["cuisine"], r["location"], r["phonenumber"], r["rating"]))
 
     def add_item_to_cart(self):
         # For simplicity, let's assume user always adds "Pizza"
