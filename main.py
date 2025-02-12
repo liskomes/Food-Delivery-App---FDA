@@ -166,6 +166,7 @@ class LoginFrame(tk.Frame):
 
 class MainAppFrame(tk.Frame):
     def __init__(self, master, user_email):
+        self.sort_ascending = True
         super().__init__(master)
         tk.Label(self, text=f"Welcome, {user_email}", font=("Arial", 14)).pack(pady=10)
 
@@ -196,7 +197,7 @@ class MainAppFrame(tk.Frame):
         self.results_tree.heading("cuisine", text="Cuisine")
         self.results_tree.heading("location", text="Location")
         self.results_tree.heading("phonenumber", text="Phone number")
-        self.results_tree.heading("rating", text="Rating")
+        self.results_tree.heading("rating", text="Rating", command=self.sort_by_rating)  #Added sort
 
         # Define widths and alignment
         self.results_tree.column("cuisine", width=150, anchor="w")
@@ -212,6 +213,19 @@ class MainAppFrame(tk.Frame):
         tk.Button(action_frame, text="Add Item to Cart", command=self.add_item_to_cart).pack(side="left", padx=5)
         tk.Button(action_frame, text="View Cart", command=self.view_cart).pack(side="left", padx=5)
         tk.Button(action_frame, text="Checkout", command=self.checkout).pack(side="left", padx=5)
+
+    def sort_by_rating(self):
+        items = [(self.results_tree.item(child, "values"), child) for child in self.results_tree.get_children()]
+    
+        # Järjestetään arvostelun mukaan, käännetään tarvittaessa
+        sorted_items = sorted(items, key=lambda x: float(x[0][3]), reverse=self.sort_ascending)
+    
+        # Päivitetään järjestys
+        for index, (values, child) in enumerate(sorted_items):
+            self.results_tree.move(child, "", index)
+    
+        # Vaihdetaan järjestyssuuntaa seuraavaa klikkausta varten
+        self.sort_ascending = not self.sort_ascending
 
     def search_restaurants(self):
         self.results_tree.delete(*self.results_tree.get_children())
@@ -425,3 +439,61 @@ class TestMain(unittest.TestCase):
         # Make sure the cart remains empty (should still contain 0 items)
         self.assertEqual(len(self.cart.items), 0)
 
+import unittest
+from unittest.mock import MagicMock
+from tkinter import ttk
+from main import MainAppFrame, Application
+
+class TestSortByRating(unittest.TestCase):
+    def setUp(self):
+        self.app = Application()
+        self.app.login_user("testuser@example.com")
+        self.main_frame = self.app.current_frame
+        self.main_frame.sort_ascending = True  # Asetetaan oletusjärjestys nousevaksi
+        self.results_tree = self.main_frame.results_tree
+        self.results_tree.get_children = MagicMock()
+        self.results_tree.item = MagicMock()
+        self.results_tree.move = MagicMock()
+
+    def test_sort_by_rating_ascending(self):
+    # Simuloidaan Treeviewin tietoja
+        self.results_tree.get_children.return_value = ["id1", "id2", "id3"]
+        self.results_tree.item.side_effect = lambda x, option: {
+            "id1": ("Pizza", "NYC", "123-456", "3.5"),
+            "id2": ("Burger", "LA", "987-654", "4.5"),
+            "id3": ("Salad", "SF", "555-111", "2.0"),
+        }[x]
+        
+        # Kutsutaan testattavaa metodia
+        self.main_frame.sort_by_rating()
+
+        print("Sort ascending:", self.main_frame.sort_ascending)
+        print("Move calls:", self.results_tree.move.mock_calls)
+        
+        # Tarkistetaan, että arvot järjestetään oikein nousevasti
+        self.results_tree.move.assert_any_call("id2", "", 0)
+        self.results_tree.move.assert_any_call("id1", "", 1)
+        self.results_tree.move.assert_any_call("id3", "", 2)
+        self.assertFalse(self.main_frame.sort_ascending)  # Tarkistetaan, että suunta vaihtui
+
+    
+    def test_sort_by_rating_descending(self):
+        self.main_frame.sort_ascending = False  # Vaihdetaan järjestys laskevaksi
+        self.results_tree.get_children.return_value = ["id1", "id2", "id3"]
+        self.results_tree.item.side_effect = lambda x, option: {
+            "id1": ("Pizza", "NYC", "123-456", "3.5"),
+            "id2": ("Burger", "LA", "987-654", "4.5"),
+            "id3": ("Salad", "SF", "555-111", "2.0"),
+        }[x]
+        
+        # Kutsutaan testattavaa metodia
+        self.main_frame.sort_by_rating()
+        
+        # Tarkistetaan, että arvot järjestetään oikein laskevasti
+        self.results_tree.move.assert_any_call("id3", "", 0)
+        self.results_tree.move.assert_any_call("id1", "", 1)
+        self.results_tree.move.assert_any_call("id2", "", 2)
+        self.assertTrue(self.main_frame.sort_ascending)  # Tarkistetaan, että suunta vaihtui takaisin
+
+if __name__ == "__main__":
+    unittest.main()
