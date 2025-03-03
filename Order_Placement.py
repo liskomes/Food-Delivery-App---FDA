@@ -1,8 +1,5 @@
-import unittest
-
-# from unittest import mock  # Import the mock module for simulating payment failures in tests.
-
 # CartItem Class
+
 class CartItem:
     """
     Represents an individual item in the shopping cart.
@@ -280,5 +277,4 @@ class RestaurantMenu:
         """
         return item_name in self.available_items
     
-if __name__ == "__main__":
-    unittest.main()
+
