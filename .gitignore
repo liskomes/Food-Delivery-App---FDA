@@ -2,3 +2,5 @@ users.json
 __pycache__
 .coverage
 htmlcov
+tests/__pycache__
+tests/.coverage
