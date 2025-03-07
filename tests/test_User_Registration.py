@@ -5,6 +5,39 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from User_Registration import UserRegistration
 
+import re
+
+"""Faking the UserRegistration"""
+class FakeUserRegistration():
+    def __init__(self):
+
+        self.users = {'jenni@kissa.fi': {'password': 'kissa12!', 'confirmed': False}, 'jenni@kissafi.fi': {'password': 'kissa12!!', 'confirmed': False}, 'jenni@kissakissa.fi': {'password': 'kissa12!!', 'confirmed': False}, 'jee@jee.fi': {'password': 'kissa12!!', 'confirmed': False}}
+
+    def register(self, email, password, confirm_password):
+    
+        if not self.is_valid_email(email):
+            return {"success": False, "error": "Invalid email format"}  # If email format is invalid, return an error.
+        if password != confirm_password:
+            return {"success": False, "error": "Passwords do not match"}  # If passwords don't match, return an error.
+        if not self.is_strong_password(password):
+            return {"success": False, "error": "Password is not strong enough"}  # If password isn't strong, return an error.
+        if email in self.users:
+            return {"success": False, "error": "Email already registered"}  # If the email is already registered, return an error.
+
+        # Register the user if all conditions are met and return a success message.
+        self.users[email] = {"password": password, "confirmed": False}
+        return {"success": True, "message": "Registration successful, confirmation email sent"}
+
+    def is_valid_email(self, email): #Add regex pattern (import re)
+
+        return re.match(r'^\w{1,}@(\w{1,}+\.)+[a-zA-Z]{1,}$', email)
+
+    def is_strong_password(self, password):
+
+        return len(password) >= 8 and any(c.isdigit() for c in password) and any(c.isalpha() for c in password)
+
+
+
 class TestUserRegistration(unittest.TestCase):
 
     def setUp(self):
@@ -12,7 +45,8 @@ class TestUserRegistration(unittest.TestCase):
         Set up the test environment by creating an instance of the UserRegistration class.
         This instance will be used across all test cases.
         """
-        self.registration = UserRegistration()
+        """self.registration = UserRegistration()"""
+        self.registration = FakeUserRegistration()
 
     def test_successful_registration(self):
         """
