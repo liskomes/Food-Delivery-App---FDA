@@ -11,11 +11,28 @@ class TestRestaurantBrowsing(unittest.TestCase):
     """
 
     def setUp(self):
+        # """
+        # Set up the test case by initializing a RestaurantDatabase and RestaurantBrowsing instance.
+        # """
+        # self.database = RestaurantDatabase()
+        # self.browsing = RestaurantBrowsing(self.database)
+
         """
-        Set up the test case by initializing a RestaurantDatabase and RestaurantBrowsing instance.
+        Set up the test case by initializing a mock and stubb for RestaurantDatabase
         """
-        self.database = RestaurantDatabase()
+        # Stubbs the RestaurantDatabase
+        self.database = mock.MagicMock()
+        self.database.get_restaurants.return_value = [
+            {"name": "Pekan pitsa","cuisine": "Pizza", "location": "NYC", "phonenumber": "123-456", "rating": 4.5},
+            {"name": "Pirjon pitsa","cuisine": "Italian", "location": "LA", "phonenumber": "987-654", "rating": 4.5},
+            {"name": "Pirjon pitsa","cuisine": "Italian", "location": "Downtown", "phonenumber": "987-654", "rating": 3.0},
+            {"name": "Kallen pitsa","cuisine": "Finlandian", "location": "Kannus", "phonenumber": "987-654", "rating": 5.0},
+            {"name": "Italian Bistro","cuisine": "Italian Bistro", "location": "Downtown", "phonenumber": "987-654", "rating": 4.0}
+        ]
+        
+        # Creates a RestaurantBrowsing-object
         self.browsing = RestaurantBrowsing(self.database)
+
 
     def test_search_by_cuisine(self):
         """
