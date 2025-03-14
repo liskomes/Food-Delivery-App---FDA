@@ -22,8 +22,6 @@ class TestModuleIntegrations(unittest.TestCase):
             "testuser@example.com": {"password": "password123"}
         }
 
-       
-
     def test_successful_login(self):
         self.login_frame.email_entry.insert(0, "testuser@example.com")
         self.login_frame.pass_entry.insert(0, "password123")
